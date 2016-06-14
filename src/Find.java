@@ -2,17 +2,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
 public class Find{
 
     private static TreeMap<Integer, ArrayList<Integer>> inputEdges = new TreeMap<>();
-    private static TreeMap<Integer, LinkedList<Node>> edges = new TreeMap<>();
-    private static long counter = 0;
+	private static int[][] edges;
+	private static int endNode;
+	private static long counter = 0;
     private static int noOfNodes;
-    private static ArrayList<Node> visited;
+    private static boolean[] visited;
 
     public static void main(String[] args) {
         // it's just brute-forcing a bit
@@ -26,12 +26,11 @@ public class Find{
             e.printStackTrace();
         }
         int startNode = new Integer(lines.get(0).split(" ")[0]);
-        int endNode = new Integer(lines.get(0).split(" ")[1]);
+        endNode = new Integer(lines.get(0).split(" ")[1]);
 
         noOfNodes = lines.size() - 1;
 
-        ArrayList<Node> nodes = new ArrayList<>(noOfNodes);
-        for(int i = 0; i< noOfNodes; i++) nodes.add(new Node(i));
+		edges = new int[noOfNodes][noOfNodes];
 
         // get unidirectional paths
         for (int i = 0; i < noOfNodes; i++) {
@@ -45,51 +44,57 @@ public class Find{
 
         // getting bidirectional
 
-        LinkedList<Node> es;
-        for(int i = 0; i < noOfNodes ; i++){
-            es = new LinkedList<>();
-            for(int j = 0; j < noOfNodes ; j++){
-                if(hasPath(i, j) && i!=j){
-                    es.add(nodes.get(j));
-                }
-            }
-            edges.put(i, es);
-        }
+		// clear array
 
-        visited = new ArrayList<>();
+
+		for(int i = 0; i < noOfNodes; i++){
+			int k = 0;
+			for(int j = 0; j < noOfNodes; j++){
+				edges[i][j] = -1;
+				if(hasPath(i,j)){
+					edges[i][k] = j;
+					k++;
+				}
+			}
+		}
+
+        visited = new boolean[noOfNodes];
         // count all cases
 
-        Node start = nodes.get(startNode);
-        Node finish = nodes.get(endNode);
-
-        visited.add(start);
-        bruteForce(edges.get(startNode), finish, 1);
+        visited[startNode] = true;
+        bruteForce(startNode, 1);
         // generate output
 
         System.out.println(counter);
     }
 
-    private static void bruteForce(LinkedList<Node> list, Node end, int i) {
-        for (Node node : list) {
-            if(visited.contains(node)){
-                continue;
-            }
-            if(node.hashCode() == end.hashCode()) {
-                if (i == noOfNodes - 1){
-                    counter++;
-                    return;
-                }
-                continue;
-            }
-            visited.add(node);
-            bruteForce(edges.get(node.name), end, i+1);
-            visited.remove(node);
-        }
-    }
+    private static void bruteForce(int currentNode, int i) {
+		for (int node : edges[currentNode]) {
+			if(node == -1) return;
+			if (node == endNode) {
+				if(i == noOfNodes - 1){
+					counter++;
+				}
+				continue;
+			}
+			if (visited[node]) {
+				continue;
+			}
+
+			visited[node] = true;
+			bruteForce(node, i + 1);
+			visited[node] = false;
+		}
+	}
 
     private static boolean hasPath(Integer i, Integer j){
-        if(inputEdges.get(i).contains(j)) return true;
-        else return inputEdges.get(j).contains(i);
+        if(inputEdges.get(i).contains(j)){
+			return true;
+		}
+        else if(inputEdges.get(j).contains(i)){
+			return true;
+		}
+		return false;
     }
 
     public static long tester(String[] args){
@@ -97,13 +102,5 @@ public class Find{
         long r = counter;
         counter = 0;
         return r;
-    }
-
-    private static class Node{
-        public int name;
-
-        Node(int i){
-            name = i;
-        }
     }
 }

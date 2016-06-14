@@ -25,13 +25,13 @@ public class Tester {
         proof("graph11a.txt", 2, time);
         proof("graph44a.txt", 110, time);
         proof("graph44b.txt", 300, time);
-        for(int i = 5; i > 0; i--)
+//        for(int i = 5; i > 0; i--)
         proof("graph44c.txt", 794, time);
 
 
-//        proof("graph52a.txt", 909, time);
-//        proof("graph52b.txt", 788, time);
-//        proof("graph52c.txt", 1819, time);
+        proof("graph52a.txt", 909, time);
+        proof("graph52b.txt", 788, time);
+        proof("graph52c.txt", 1819, time);
 //        proof("graph52d.txt", 2570, time);
 //        proof("graph52e.txt", 3047, time);
 //        proof("graph52f.txt", 2729, time);

@@ -30,8 +30,8 @@ public class Tester {
 
 
         proof("graph52a.txt", 909, time);
-        proof("graph52b.txt", 788, time);
-        proof("graph52c.txt", 1819, time);
+//        proof("graph52b.txt", 788, time);
+//        proof("graph52c.txt", 1819, time);
 //        proof("graph52d.txt", 2570, time);
 //        proof("graph52e.txt", 3047, time);
 //        proof("graph52f.txt", 2729, time);

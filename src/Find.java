@@ -71,16 +71,15 @@ public class Find{
     private static void bruteForce(int currentNode, int i) {
 		for (int node : edges[currentNode]) {
 			if(node == -1) return;
+			if (visited[node]) {
+				continue;
+			}
 			if (node == endNode) {
 				if(i == noOfNodes - 1){
 					counter++;
 				}
 				continue;
 			}
-			if (visited[node]) {
-				continue;
-			}
-
 			visited[node] = true;
 			bruteForce(node, i + 1);
 			visited[node] = false;

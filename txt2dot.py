@@ -7,6 +7,17 @@ for path in listdir('.'):
         with open(path) as input:
             with open('dot/{0}.dot'.format(path), 'w') as output:
                 output.write('digraph G {\n')
+                first = True
+                start_node = None
+                end_node = None
                 for line in input:
-                    output.write(line.replace(' ', ' -> '))
+                    if first:
+                        first = False
+                        start_node, end_node = line.split()
+                        continue
+                    nodes = line.split()
+                    from_node = nodes[0]
+                    to_nodes = nodes[1:]
+                    for node in to_nodes:
+                        output.write('{0} -> {1}\n'.format(from_node, node))
                 output.write('}')

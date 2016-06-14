@@ -1,20 +1,18 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
-
-/**
- * Created by Christoph Ruhl on 6/11/16.
- */
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TreeMap;
 
 public class Find{
 
-    private static TreeMap<Integer, ArrayList<Integer>> inputEdges= new TreeMap<>();
-    private static TreeMap<Integer, ArrayList<Integer>> edges= new TreeMap<>();
+    private static TreeMap<Integer, ArrayList<Integer>> inputEdges = new TreeMap<>();
+    private static TreeMap<Integer, LinkedList<Node>> edges = new TreeMap<>();
     private static long counter = 0;
-    private static int startNode;
-    private static int endNode;
     private static int noOfNodes;
+    private static ArrayList<Node> visited;
 
     public static void main(String[] args) {
         // it's just brute-forcing a bit
@@ -27,10 +25,13 @@ public class Find{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        startNode = new Integer(lines.get(0).split(" ")[0]);
-        endNode = new Integer(lines.get(0).split(" ")[1]);
+        int startNode = new Integer(lines.get(0).split(" ")[0]);
+        int endNode = new Integer(lines.get(0).split(" ")[1]);
 
         noOfNodes = lines.size() - 1;
+
+        ArrayList<Node> nodes = new ArrayList<>(noOfNodes);
+        for(int i = 0; i< noOfNodes; i++) nodes.add(new Node(i));
 
         // get unidirectional paths
         for (int i = 0; i < noOfNodes; i++) {
@@ -43,37 +44,46 @@ public class Find{
         }
 
         // getting bidirectional
+
+        LinkedList<Node> es;
         for(int i = 0; i < noOfNodes ; i++){
-            ArrayList<Integer> es = new ArrayList<>();
+            es = new LinkedList<>();
             for(int j = 0; j < noOfNodes ; j++){
-                if(hasPath(i, j)){
-                    es.add(j);
+                if(hasPath(i, j) && i!=j){
+                    es.add(nodes.get(j));
                 }
             }
             edges.put(i, es);
         }
 
+        visited = new ArrayList<>();
         // count all cases
-        ArrayList<Integer> vis = new ArrayList<>(noOfNodes);
-        bruteForce(startNode, vis, 1);
 
+        Node start = nodes.get(startNode);
+        Node finish = nodes.get(endNode);
+
+        visited.add(start);
+        bruteForce(edges.get(startNode), finish, 1);
         // generate output
 
         System.out.println(counter);
     }
 
-    private static void bruteForce(int node, ArrayList<Integer> visits, int d) {
-        ArrayList<Integer> v = (ArrayList<Integer>) visits.clone();
-        v.add(node);
-        for (Integer n : edges.get(node)) {
-            if(!v.contains(n)){
-                if(n == endNode && d == noOfNodes - 1){
+    private static void bruteForce(LinkedList<Node> list, Node end, int i) {
+        for (Node node : list) {
+            if(visited.contains(node)){
+                continue;
+            }
+            if(node.hashCode() == end.hashCode()) {
+                if (i == noOfNodes - 1){
                     counter++;
                     return;
-                } else if(n != endNode){
-                    bruteForce(n, v, d + 1);
                 }
+                continue;
             }
+            visited.add(node);
+            bruteForce(edges.get(node.name), end, i+1);
+            visited.remove(node);
         }
     }
 
@@ -87,5 +97,13 @@ public class Find{
         long r = counter;
         counter = 0;
         return r;
+    }
+
+    private static class Node{
+        public int name;
+
+        Node(int i){
+            name = i;
+        }
     }
 }

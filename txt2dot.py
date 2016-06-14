@@ -20,6 +20,6 @@ for path in listdir('.'):
                     to_nodes = nodes[1:]
                     for node in to_nodes:
                         output.write('{0} -- {1}\n'.format(from_node, node))
-                    output.write('{0} [fillcolor = green]\n'.format(start_node))
-                    output.write('{0} [fillcolor = blue]\n'.format(end_node))
+                output.write('{0} [fillcolor=green, style=filled]\n'.format(start_node))
+                output.write('{0} [fillcolor=blue, style=filled]\n'.format(end_node))
                 output.write('}')

@@ -6,7 +6,7 @@ for path in listdir('.'):
     if path.startswith('graph'):
         with open(path) as input:
             with open('dot/{0}.dot'.format(path), 'w') as output:
-                output.write('digraph G {\n')
+                output.write('graph G {\n')
                 first = True
                 start_node = None
                 end_node = None
@@ -19,5 +19,7 @@ for path in listdir('.'):
                     from_node = nodes[0]
                     to_nodes = nodes[1:]
                     for node in to_nodes:
-                        output.write('{0} -> {1}\n'.format(from_node, node))
+                        output.write('{0} -- {1}\n'.format(from_node, node))
+                    output.write('{0} [fillcolor = green]\n'.format(start_node))
+                    output.write('{0} [fillcolor = blue]\n'.format(end_node))
                 output.write('}')

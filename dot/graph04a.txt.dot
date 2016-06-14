@@ -1,6 +1,8 @@
-digraph G {
-0 -> 1
-0 -> 3
-1 -> 2
-2 -> 3
+graph G {
+0 -- 1
+0 -- 3
+1 -- 2
+2 -- 3
+3 [fillcolor=green, style=filled]
+2 [fillcolor=blue, style=filled]
 }

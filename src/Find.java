@@ -70,30 +70,34 @@ public class Find{
 
     private static void bruteForce(int currentNode, int i) {
 		for (int node : edges[currentNode]) {
-			if(node == -1) return;
+			if (node == -1) return;
 			if (visited[node]) {
 				continue;
 			}
 			if (node == endNode) {
-				if(i == noOfNodes - 1){
+//				if(i == noOfNodes - 1){
+//					counter++;
+//					return;
+//				}
+				continue;
+			}
+			if(i == noOfNodes - 2){
+				if(hasPath(node, endNode)){
 					counter++;
 				}
 				continue;
 			}
+
+
 			visited[node] = true;
 			bruteForce(node, i + 1);
 			visited[node] = false;
 		}
 	}
 
-    private static boolean hasPath(Integer i, Integer j){
-        if(inputEdges.get(i).contains(j)){
-			return true;
-		}
-        else if(inputEdges.get(j).contains(i)){
-			return true;
-		}
-		return false;
+    private static boolean hasPath(int i, int j){
+        if(inputEdges.get(i).contains(j)) return true;
+		return inputEdges.get(j).contains(i);
     }
 
     public static long tester(String[] args){

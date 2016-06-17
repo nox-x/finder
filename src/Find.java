@@ -12,7 +12,7 @@ public class Find{
 	private static int endNode;
 	private static long counter = 0;
     private static int noOfNodes;
-    private static boolean[] visited;
+    private static int[] visited;
 
     public static void main(String[] args) {
         // it's just brute-forcing a bit
@@ -54,15 +54,14 @@ public class Find{
 				if(hasPath(i,j)){
 					edges[i][k] = j;
 					k++;
-					continue;
 				}
 			}
 		}
 
-        visited = new boolean[noOfNodes];
+        visited = new int[noOfNodes];
         // count all cases
 
-        visited[startNode] = true;
+        visited[startNode] = 1;
         bruteForce(startNode, 1);
         // generate output
 
@@ -71,26 +70,20 @@ public class Find{
 
     private static void bruteForce(int currentNode, int i) {
 		for (int node : edges[currentNode]) {
-			if (node == -1){
-				return;
-			}
-			if (visited[node]) {
-				continue;
-			}
-			if(node == endNode){
-				continue;
-			}
+			if (node == -1) return;
+			if (visited[node] == 1) continue;
+			if(node == endNode) continue;
 			if(i == noOfNodes - 2){
 				if(hasPath(node, endNode)){
 					counter++;
 				}
-				return;
+				continue;
 			}
 
 
-			visited[node] = true;
+			visited[node] = 1;
 			bruteForce(node, i + 1);
-			visited[node] = false;
+			visited[node] = 0;
 		}
 	}
 

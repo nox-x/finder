@@ -30,9 +30,7 @@ public class Find{
 
         noOfNodes = lines.size() - 1;
 
-		edges = new int[noOfNodes][noOfNodes];
-
-        // get unidirectional paths
+		// get unidirectional paths
         for (int i = 0; i < noOfNodes; i++) {
             String line = lines.get(i+1);
             ArrayList<Integer> nodeEdges = new ArrayList<>(line.split(" ").length - 1);
@@ -44,6 +42,8 @@ public class Find{
 
         // getting bidirectional
 
+		edges = new int[noOfNodes][noOfNodes];
+
 		// clear array
 
 
@@ -54,6 +54,7 @@ public class Find{
 				if(hasPath(i,j)){
 					edges[i][k] = j;
 					k++;
+					continue;
 				}
 			}
 		}
@@ -70,22 +71,20 @@ public class Find{
 
     private static void bruteForce(int currentNode, int i) {
 		for (int node : edges[currentNode]) {
-			if (node == -1) return;
+			if (node == -1){
+				return;
+			}
 			if (visited[node]) {
 				continue;
 			}
-			if (node == endNode) {
-//				if(i == noOfNodes - 1){
-//					counter++;
-//					return;
-//				}
+			if(node == endNode){
 				continue;
 			}
 			if(i == noOfNodes - 2){
 				if(hasPath(node, endNode)){
 					counter++;
 				}
-				continue;
+				return;
 			}
 
 

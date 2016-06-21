@@ -7,45 +7,43 @@ import java.util.TreeMap;
 
 public class Find{
 
-    private static TreeMap<Integer, ArrayList<Integer>> inputEdges = new TreeMap<>();
+	private static TreeMap<Integer, ArrayList<Integer>> inputEdges = new TreeMap<>();
 	private static int[][] edges;
 	private static int endNode;
 	private static long counter = 0;
-    private static int noOfNodes;
-    private static boolean[] visited;
+	private static int noOfNodes;
+	private static boolean[] visited;
 
-    public static void main(String[] args) {
-        // it's just brute-forcing a bit
+	public static void main(String[] args) {
+		// it's just brute-forcing a bit
 
-        // read file
+		// read file
 
-        List<String> lines = null;
-        try {
-            lines = Files.readAllLines(Paths.get(args[0]));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int startNode = new Integer(lines.get(0).split(" ")[0]);
-        endNode = new Integer(lines.get(0).split(" ")[1]);
+		List<String> lines = null;
+		try {
+			lines = Files.readAllLines(Paths.get(args[0]));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		assert lines != null;
+		int startNode = new Integer(lines.get(0).split(" ")[0]);
+		endNode = new Integer(lines.get(0).split(" ")[1]);
 
-        noOfNodes = lines.size() - 1;
+		noOfNodes = lines.size() - 1;
 
 		edges = new int[noOfNodes][noOfNodes];
 
-        // get unidirectional paths
-        for (int i = 0; i < noOfNodes; i++) {
-            String line = lines.get(i+1);
-            ArrayList<Integer> nodeEdges = new ArrayList<>(line.split(" ").length - 1);
-            for (String s : line.split(" ")) {
-                nodeEdges.add(new Integer(s));
-            }
-            inputEdges.put(i, nodeEdges);
-        }
+		// get unidirectional paths
+		for (int i = 0; i < noOfNodes; i++) {
+			String line = lines.get(i+1);
+			ArrayList<Integer> nodeEdges = new ArrayList<>(line.split(" ").length - 1);
+			for (String s : line.split(" ")) {
+				nodeEdges.add(new Integer(s));
+			}
+			inputEdges.put(i, nodeEdges);
+		}
 
-        // getting bidirectional
-
-		// clear array
-
+		// getting bidirectional and setting edgeCounter
 
 		for(int i = 0; i < noOfNodes; i++){
 			int k = 0;
@@ -58,27 +56,27 @@ public class Find{
 			}
 		}
 
-        visited = new boolean[noOfNodes];
-        // count all cases
+		visited = new boolean[noOfNodes];
 
-        visited[startNode] = true;
-        bruteForce(startNode, 1);
-        // generate output
+		// count all cases
 
-        System.out.println(counter);
-    }
+		visited[startNode] = true;
 
-    private static void bruteForce(int currentNode, int i) {
+		bruteForce(startNode, 1);
+
+		// generate output
+
+		System.out.println(counter);
+	}
+
+	private static void bruteForce(int currentNode, int i) {
+
 		for (int node : edges[currentNode]) {
 			if (node == -1) return;
 			if (visited[node]) {
 				continue;
 			}
 			if (node == endNode) {
-//				if(i == noOfNodes - 1){
-//					counter++;
-//					return;
-//				}
 				continue;
 			}
 			if(i == noOfNodes - 2){
@@ -88,22 +86,29 @@ public class Find{
 				continue;
 			}
 
-
 			visited[node] = true;
+			for(int neighbour : edges[node]){
+				if(neighbour == -1 ){
+					visited[node] = false;
+					return;
+				}
+				if(!visited[neighbour]){
+					break;
+				}
+			}
 			bruteForce(node, i + 1);
 			visited[node] = false;
 		}
 	}
 
-    private static boolean hasPath(int i, int j){
-        if(inputEdges.get(i).contains(j)) return true;
-		return inputEdges.get(j).contains(i);
-    }
+	private static boolean hasPath(int i, int j) {
+		return inputEdges.get(i).contains(j) || inputEdges.get(j).contains(i);
+	}
 
-    public static long tester(String[] args){
-        main(args);
-        long r = counter;
-        counter = 0;
-        return r;
-    }
+	static long tester(String[] args){
+		main(args);
+		long r = counter;
+		counter = 0;
+		return r;
+	}
 }

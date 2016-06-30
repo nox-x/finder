@@ -7,12 +7,15 @@ import java.util.TreeMap;
 
 public class Find{
 
+	private static final int MAX_REFS = 7;
+
 	private static TreeMap<Integer, ArrayList<Integer>> inputEdges = new TreeMap<>();
 	private static int[][] edges;
 	private static int endNode;
 	private static long counter = 0;
 	private static int noOfNodes;
 	private static boolean[] visited;
+	private static int[] references;
 
 	public static void main(String[] args) {
 		// it's just brute-forcing a bit
@@ -31,7 +34,8 @@ public class Find{
 
 		noOfNodes = lines.size() - 1;
 
-		edges = new int[noOfNodes][noOfNodes];
+		edges = new int[noOfNodes][MAX_REFS];
+		references = new int[noOfNodes];
 
 		// get unidirectional paths
 		for (int i = 0; i < noOfNodes; i++) {
@@ -48,8 +52,10 @@ public class Find{
 		for(int i = 0; i < noOfNodes; i++){
 			int k = 0;
 			for(int j = 0; j < noOfNodes; j++){
-				edges[i][j] = -1;
+				if(j < MAX_REFS) edges[i][j] = -1;
+				if(i == j) continue;
 				if(hasPath(i,j)){
+					references[i]++;
 					edges[i][k] = j;
 					k++;
 				}
@@ -61,7 +67,11 @@ public class Find{
 		// count all cases
 
 		visited[startNode] = true;
-
+		references[startNode] = 0;
+		for(int n : edges[startNode]){
+			if(n == -1) break;
+			if(n != startNode) references[n]--;
+		}
 		bruteForce(startNode, 1);
 
 		// generate output
@@ -92,11 +102,28 @@ public class Find{
 					visited[node] = false;
 					return;
 				}
-				if(!visited[neighbour]){
+				if(!visited[neighbour] || references[neighbour] >= 1){
 					break;
 				}
 			}
+//			int cache = references[node];
+//			references[node] = 0;
+//			for (int l : edges[node]) {
+//				if(l == -1) break;
+//				if(l == node) continue;
+// 				if(!visited[l]){
+//					references[l]--;
+//					if(references[l] == 0){
+//						return;
+//					}
+//				}
+//			}
 			bruteForce(node, i + 1);
+//			for (int l : edges[node]){
+//				if(l == -1) break;
+//				references[l]++;
+//			}
+//			references[node] = cache;
 			visited[node] = false;
 		}
 	}

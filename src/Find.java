@@ -16,8 +16,6 @@ public class Find{
 	private static int noOfNodes;
 	private static boolean[] visited;
 
-	private static int[] refs;
-
 	public static void main(String[] args) {
 		// it's just brute-forcing a bit
 
@@ -36,7 +34,6 @@ public class Find{
 		noOfNodes = lines.size() - 1;
 
 		edges = new int[noOfNodes][MAX_REFS];
-		refs = new int[noOfNodes];
 
 		// get unidirectional paths
 		for (int i = 0; i < noOfNodes; i++) {
@@ -57,7 +54,6 @@ public class Find{
 				if(i == j) continue;
 				if(hasPath(i,j)){
 					edges[i][k] = j;
-					refs[i]++;
 					k++;
 				}
 			}
@@ -68,7 +64,6 @@ public class Find{
 		// count all cases
 
 		visited[startNode] = true;
-		lowerRefs(startNode);
 		bruteForce(startNode, 1);
 
 		// generate output
@@ -77,6 +72,17 @@ public class Find{
 	}
 
 	private static void bruteForce(int currentNode, int i) {
+
+		for (int node: edges[currentNode]){
+			if(node == -1) break;
+			if(visited[node]) continue;
+			int c = 0;
+			for(int neighbor : edges[node]){
+				if(neighbor == -1) break;
+				if(!visited[neighbor]) c++;
+			}
+			if(c == 0) return;
+		}
 
 		for (int node : edges[currentNode]) {
 			if (node == -1) return;
@@ -94,42 +100,12 @@ public class Find{
 			}
 
 			visited[node] = true;
-			refs[node] = 0;
-			boolean allVis = true;
-			for(int n : edges[node]){
-				if(n == -1) break;
-				if(n != node && refs[n] > 0) refs[n]--;
-				if(refs[n] <= 0 && !visited[n]) allVis = false;
-			}
-			if(!allVis){
-				visited[node] = false;
-				resetRefs(node);
-				continue;
-			}
 			bruteForce(node, i + 1);
-			resetRefs(node);
 			visited[node] = false;
 		}
 	}
 
-	private static boolean lowerRefs(int node){
-		refs[node] = 0;
-		boolean allVis = true;
-		for(int n : edges[node]){
-			if(n == -1) break;
-			if(n != node && refs[n] > 0) refs[n]--;
-			if(refs[n] <= 0 && !visited[n]) allVis = false;
-		}
-		return allVis;
-	}
 
-	private static void resetRefs(int node){
-		for(int n : edges[node]){
-			if(n == -1) break;
-			if(n != node) refs[n]++;
-			refs[node]++;
-		}
-	}
 
 	private static boolean hasPath(int i, int j) {
 		return inputEdges.get(i).contains(j) || inputEdges.get(j).contains(i);

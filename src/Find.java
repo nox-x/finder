@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 public class Find{
 
-	private static final int MAX_REFS = 7;
+	private static final int MAX_REFS = 6;
 
 	private static TreeMap<Integer, ArrayList<Integer>> inputEdges = new TreeMap<>();
 	private static int[][] edges;
@@ -15,7 +15,8 @@ public class Find{
 	private static long counter = 0;
 	private static int noOfNodes;
 	private static boolean[] visited;
-	private static int[] references;
+
+//	private static int[] refs;
 
 	public static void main(String[] args) {
 		// it's just brute-forcing a bit
@@ -35,7 +36,7 @@ public class Find{
 		noOfNodes = lines.size() - 1;
 
 		edges = new int[noOfNodes][MAX_REFS];
-		references = new int[noOfNodes];
+//		refs = new int[noOfNodes];
 
 		// get unidirectional paths
 		for (int i = 0; i < noOfNodes; i++) {
@@ -55,8 +56,8 @@ public class Find{
 				if(j < MAX_REFS) edges[i][j] = -1;
 				if(i == j) continue;
 				if(hasPath(i,j)){
-					references[i]++;
 					edges[i][k] = j;
+//					refs[i]++;
 					k++;
 				}
 			}
@@ -67,11 +68,11 @@ public class Find{
 		// count all cases
 
 		visited[startNode] = true;
-		references[startNode] = 0;
-		for(int n : edges[startNode]){
-			if(n == -1) break;
-			if(n != startNode) references[n]--;
-		}
+//		refs[startNode] = 0;
+//		for(int n : edges[startNode]){
+//			if(n == -1) break;
+//			if(n != startNode) refs[n]--;
+//		}
 		bruteForce(startNode, 1);
 
 		// generate output
@@ -97,33 +98,7 @@ public class Find{
 			}
 
 			visited[node] = true;
-			for(int neighbour : edges[node]){
-				if(neighbour == -1 ){
-					visited[node] = false;
-					return;
-				}
-				if(!visited[neighbour] || references[neighbour] >= 1){
-					break;
-				}
-			}
-//			int cache = references[node];
-//			references[node] = 0;
-//			for (int l : edges[node]) {
-//				if(l == -1) break;
-//				if(l == node) continue;
-// 				if(!visited[l]){
-//					references[l]--;
-//					if(references[l] == 0){
-//						return;
-//					}
-//				}
-//			}
 			bruteForce(node, i + 1);
-//			for (int l : edges[node]){
-//				if(l == -1) break;
-//				references[l]++;
-//			}
-//			references[node] = cache;
 			visited[node] = false;
 		}
 	}

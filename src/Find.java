@@ -15,6 +15,7 @@ public class Find{
 	private static long counter = 0;
 	private static int noOfNodes;
 	private static boolean[] visited;
+	private static boolean indicator;
 
 	public static void main(String[] args) {
 		// it's just brute-forcing a bit
@@ -73,18 +74,7 @@ public class Find{
 
 	private static void bruteForce(int currentNode, int i) {
 
-		for (int node: edges[currentNode]){
-			if(node == -1) break;
-			if(visited[node]) continue;
-			int c = 0;
-			for(int neighbor : edges[node]){
-				if(neighbor == -1) break;
-				if(!visited[neighbor]) c++;
-			}
-			if(c == 0) return;
-		}
-
-		for (int node : edges[currentNode]) {
+		outer: for (int node : edges[currentNode]) {
 			if (node == -1) return;
 			if (visited[node]) {
 				continue;
@@ -100,6 +90,23 @@ public class Find{
 			}
 
 			visited[node] = true;
+
+			inner: for (int n: edges[node]){
+				if(n == -1) break;
+				if(visited[n]) continue;
+//				indicator = false;
+				for(int neighbor : edges[n]){
+					if(neighbor == -1) break;
+					if(!visited[neighbor]){
+//						indicator = true;
+						continue inner;
+					}
+				}
+				visited[node] = false;
+				continue outer;
+
+			}
+
 			bruteForce(node, i + 1);
 			visited[node] = false;
 		}

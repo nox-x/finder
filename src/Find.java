@@ -12,7 +12,7 @@ public class Find{
 	private static int endNode;
 	private static long counter = 0;
 	private static int noOfNodes;
-	private static boolean[] visited;
+	private static int[] visited;
 
 	public static void main(String[] args) {
 		// it's just brute-forcing a bit
@@ -64,11 +64,11 @@ public class Find{
 			edges[i] = refs;
 		}
 
-		visited = new boolean[noOfNodes];
+		visited = new int[noOfNodes];
 
 		// count all cases
 
-		visited[startNode] = true;
+		visited[startNode] = 1;
 		bruteForce(startNode, 1);
 
 		// generate output
@@ -76,18 +76,18 @@ public class Find{
 		System.out.println(counter);
 	}
 
-	private static void bruteForce(int currentNode, int i) {
+	private static final void bruteForce(int currentNode, int i) {
 
 		inner: for (int node: edges[currentNode]){
-			if(visited[node]) continue;
+			if(visited[node] == 1) continue;
 			for(int neighbor : edges[node]){
-				if(!visited[neighbor]) continue inner;
+				if(visited[neighbor] == 0) continue inner;
 			}
 			return;
 		}
 
 		for (int node : edges[currentNode]) {
-			if (visited[node]) {
+			if (visited[node] == 1) {
 				continue;
 			}
 			if (node == endNode) {
@@ -100,13 +100,13 @@ public class Find{
 				continue;
 			}
 
-			visited[node] = true;
+			visited[node] = 1;
 			bruteForce(node, i + 1);
-			visited[node] = false;
+			visited[node] = 0;
 		}
 	}
 
-	private static boolean hasPath(int i, int j) {
+	private static final boolean hasPath(int i, int j) {
 		return inputEdges.get(i).contains(j) || inputEdges.get(j).contains(i);
 	}
 

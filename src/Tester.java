@@ -35,7 +35,7 @@ public class Tester {
         proof("graph52d.txt", 2570, time);
         proof("graph52e.txt", 3047, time);
         proof("graph52f.txt", 2729, time);
-//        proof("graph59a.txt", 115, time);
+        proof("graph59a.txt", 115, time);
     }
 
     private void proof(String s, int result, long t) {

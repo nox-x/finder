@@ -2,9 +2,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by nox_x on 6/12/16.
- */
 public class Tester {
 
     @Test

@@ -35,7 +35,7 @@ public class Find{
 		// get unidirectional paths
 		int j;
 
-		for (j = noOfNodes; --j >= 0;) {
+		for (j = 0; j < noOfNodes ; j++) {
 			String line = lines.get(j+1);
 			ArrayList<Integer> nodeEdges = new ArrayList<>(line.split(" ").length - 1);
 			for (String s : line.split(" ")) {
@@ -47,9 +47,9 @@ public class Find{
 		// getting bidirectional and setting edgeCounter
 		int i;
 
-		for(i = noOfNodes; --i >= 0;){
+		for(i = 0; i < noOfNodes; i++){
 			int k = 0;
-			for(j = noOfNodes; --j >= 0;){
+			for(j = 0; j < noOfNodes ; j++){
 				if(i == j) continue;
 				if(hasPath(i,j)){
 					k++;
@@ -57,7 +57,7 @@ public class Find{
 			}
 			int[] refs = new int[k];
 			k = 0;
-			for(j = noOfNodes; --j >= 0;){
+			for(j = 0; j < noOfNodes ; j++){
 				if(i == j) continue;
 				if(hasPath(i,j)){
 					refs[k++] = j;
@@ -110,7 +110,7 @@ public class Find{
 		}
 	}
 
-	private static boolean hasPath(int i, int j) {
+	private static final boolean hasPath(int i, int j) {
 		return inputEdges.get(i).contains(j) || inputEdges.get(j).contains(i);
 	}
 

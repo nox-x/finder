@@ -81,14 +81,7 @@ public class Find{
 
 	private static void bruteForce(int currentNode, int i) {
 
-		inner: for (int n: edges[currentNode]){
-			if(visited[n] == 1) continue;
-			for(int neighbor : edges[n]){
-				if (visited[neighbor] == 0) continue inner;
-			}
-			return;
-		}
-
+		outer:
 		for (int node : edges[currentNode]) {
 			if (visited[node] == 1) {
 				continue;
@@ -105,6 +98,22 @@ public class Find{
 			}
 
 			visited[node] = 1;
+
+			inner:
+			for (int n : edges[currentNode]) {
+				if (visited[n] == 1 || n == node) continue;
+				int openConnections = 0;
+				for (int neighbor : edges[n]) {
+					if (neighbor == node)
+						continue inner;
+					openConnections += 1-visited[neighbor];
+				}
+				if (openConnections <= (n == endNode ? 0 : 1)) {
+					visited[node] = 0;
+					continue outer;
+				}
+			}
+
 			bruteForce(node, i + 1);
 			visited[node] = 0;
 		}

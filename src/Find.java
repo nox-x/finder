@@ -75,7 +75,7 @@ public class Find{
 
 		// generate output
 
-		System.out.println(counter);
+//		System.out.println(counter);
 	}
 
 
